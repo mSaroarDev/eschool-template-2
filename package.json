@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-pdf/renderer": "^3.4.4",
     "daisyui": "^4.12.6",
+    "flowbite": "^2.3.0",
     "formik": "^2.4.6",
     "lucide-react": "^0.396.0",
     "nextjs-toploader": "^1.6.12",

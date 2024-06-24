@@ -8,6 +8,7 @@ import StaffsPage from "./pages/StaffsPage";
 import CommitteePage from "./pages/CommitteePage";
 import ResultPage from "./pages/ResultPage";
 import ContactPage from "./pages/ContactPage";
+import StudentsPage from "./pages/Students";
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
           <Route path="/teachers" element={<TeachersPage />} />
           <Route path="/staffs" element={<StaffsPage />} />
           <Route path="/committee" element={<CommitteePage />} />
-          <Route path="/students" element={<AboutPage />} />
+          <Route path="/students" element={<StudentsPage />} />
           <Route path="/admission" element={<AboutPage />} />
           <Route path="/result" element={<ResultPage />} />
           <Route path="/contact" element={<ContactPage />} />

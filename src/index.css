@@ -37,7 +37,7 @@
 /* poppins font */
 
 body {
-    @apply hind-siliguri-regular
+    @apply hind-siliguri-regular text-[14px]
 }
 
 main {
