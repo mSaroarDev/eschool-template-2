@@ -1,4 +1,28 @@
+import { useEffect, useState } from "react";
+import { mySchoolId } from "../utils/getApiUrl";
+import { getSchoolInfo } from "../libs/schoolAPI";
+
 export default function Header() {
+  // get school id
+  const schoolId = mySchoolId();
+
+  // fetch school info
+  const [data, setData] = useState();
+  const fetchData = async () => {
+    const res = await getSchoolInfo(schoolId);
+
+    if (res.ok) {
+      const data = await res.json();
+      setData(data.data);
+    } else {
+      console.log("Internal server error");
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <>
       <div className="bg-gray-100 py-1">
@@ -30,11 +54,11 @@ export default function Header() {
         <main className="px-5 flex items-center justify-between">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-5 mb-5 lg:mb-0">
             <div className="w-[120px] h-[120px]">
-              <img src="/school-logo.png" alt="Logo" className="w-full h-full object-contain" />
+              <img src={(data && data?.school_information?.logo) || "/logo.png"} alt="Logo" className="w-full h-full object-contain" />
             </div>
             <div>
-              <h1 className="font-bold text-[28px]">ইসলামিক স্কুল অব বাংলাদেশ</h1>
-              <h1 className="text-[18px]">পবা, রাজশাহী।</h1>
+              <h1 className="font-bold text-[28px]">{data && data?.name_bn} (EIIN: {data && data?.eiin})</h1>
+              <h1 className="text-[18px]">{data && data?.institute_address}</h1>
             </div>
           </div>
 

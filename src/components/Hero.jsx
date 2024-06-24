@@ -3,20 +3,23 @@ import { Link } from "react-router-dom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { mySchoolId } from "../utils/getApiUrl";
+import { useEffect, useState } from "react";
+import { getAllTeachers } from "./../libs/teacherAPI";
 
 export default function Hero() {
   const heroImages = [
     {
       id: 1,
-      image: "image"
+      image: "image",
     },
     {
       id: 2,
-      image: "image"
+      image: "image",
     },
     {
       id: 3,
-      image: "image"
+      image: "image",
     },
   ];
 
@@ -28,6 +31,37 @@ export default function Hero() {
     slidesToScroll: 1,
     autoplay: true,
   };
+
+  // head teacher
+  // get school id
+  const schoolId = mySchoolId();
+
+  const [allTecherData, setAllTecherData] = useState(null);
+  const fetchAllTeacherData = async () => {
+    const res = await getAllTeachers(schoolId);
+
+    if (res.ok) {
+      const data = await res.json();
+      setAllTecherData(data.data);
+    } else {
+      console.log("Internal server error");
+    }
+  };
+
+  useEffect(() => {
+    fetchAllTeacherData();
+  }, []);
+
+  const headTecher =
+    allTecherData &&
+    allTecherData.filter(
+      (teacher) =>
+        teacher?.designation == "প্রধান শিক্ষক" ||
+        teacher?.designation == "head teacher" ||
+        teacher?.designation == "head Teacher" ||
+        teacher?.designation == "Head teacher" ||
+        teacher?.designation == "Head Teacher"
+    )[0];
 
   return (
     <>
@@ -82,17 +116,24 @@ export default function Hero() {
               </Link>
             </div>
             <div className="col-span-12 md:col-span-6 lg:col-span-6 h-[352px] w-full">
-            <Slider {...settings}>
-              {heroImages.map((item) => (
-                <div className="w-full h-full">
-                    <img src="/school.webp" alt="Photo" className="w-full h-[352px] object-cover" />
-                </div>
+              <Slider {...settings}>
+                {heroImages.map((item) => (
+                  <div className="w-full h-full">
+                    <img
+                      src="/school.webp"
+                      alt="Photo"
+                      className="w-full h-[352px] object-cover"
+                    />
+                  </div>
                 ))}
-            </Slider>
+              </Slider>
             </div>
             <div className="col-span-12 md:col-span-6 lg:col-span-4 p-5 shadow-lg flex flex-col items-center justify-center gap-2">
               <div className="w-[100px] h-[100px] rounded-full ring ring-brandColor overflow-hidden">
-                <img src="/avatar.jpg" alt="President" />
+                <img
+                  src={(headTecher && headTecher?.image) || "/placeholder.jpg"}
+                  alt="President"
+                />
               </div>
 
               <h1 className="mt-4 font-bold text-[16px]">
@@ -103,9 +144,24 @@ export default function Hero() {
                 নাফরমান চলাচল করলে আমার মাতৃভূমির অসম্মান হয়।
               </p>
               <div className="mt-3 text-center">
-                <h2 className="font-bold">মোঃ সারওয়ার জাহান</h2>
+                <h2 className="font-bold">
+                  {headTecher?.designation == "Head Teacher"
+                    ? `${headTecher?.name_bn}`
+                    : headTecher?.designation == "Head teacher"
+                    ? `${headTecher?.name_bn}`
+                    : headTecher?.designation == "head teacher"
+                    ? `${headTecher?.name_bn}`
+                    : headTecher?.designation == "head Teacher"
+                    ? `${headTecher?.name_bn}`
+                    : headTecher?.designation == "প্রধান শিক্ষক"
+                    ? `${headTecher?.name_bn}`
+                    : `Not Updated Yet`}
+                </h2>
                 <h3>প্রধান শিক্ষক</h3>
-                <h3>দারুশা ‍উচ্চ বিদ্যালয়, পবা, রাজশাহী।</h3>
+                <h3>
+                  {headTecher && headTecher?.institute?.name_bn},{" "}
+                  {headTecher && headTecher?.institute?.institute_address}
+                </h3>
               </div>
             </div>
           </div>

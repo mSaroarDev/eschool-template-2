@@ -9,6 +9,8 @@ import CommitteePage from "./pages/CommitteePage";
 import ResultPage from "./pages/ResultPage";
 import ContactPage from "./pages/ContactPage";
 import StudentsPage from "./pages/Students";
+import AdmissoinHome from "./pages/AdmissoinHome";
+import AdmissionFormPage from "./pages/AdmissionFormPage";
 
 function App() {
   return (
@@ -22,7 +24,9 @@ function App() {
           <Route path="/staffs" element={<StaffsPage />} />
           <Route path="/committee" element={<CommitteePage />} />
           <Route path="/students" element={<StudentsPage />} />
-          <Route path="/admission" element={<AboutPage />} />
+          <Route path="/admission/home" element={<AdmissoinHome />} />
+          <Route path="/admission/application-form" element={<AdmissionFormPage />} />
+          <Route path="/admission/result" element={<AdmissoinHome />} />
           <Route path="/result" element={<ResultPage />} />
           <Route path="/contact" element={<ContactPage />} />
         </Routes>

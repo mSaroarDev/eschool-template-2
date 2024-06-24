@@ -1,21 +1,15 @@
 import NavItem from "./NavItem";
 import NavLink from "./NavLink";
 
-export default function Navbar() {
+export default function AdmissionNavbar() {
   return (
     <>
       <div className="hidden lg:block">
         <main className="px-5">
           <div className="flex items-center bg-lightBg">
-            <NavItem link={"/"} text="প্রথম পাতা" />
-            <NavItem link={"/about"} text="আমাদের কথা" />
-            <NavItem link={"/teachers"} text="শিক্ষকমন্ডলীর তথ্য" />
-            <NavItem link={"/staffs"} text="স্টাফদের তথ্য" />
-            <NavItem link={"/committee"} text="কমিটির তথ্য" />
-            <NavItem link={"/students?class=all"} text="শিক্ষার্থীর তথ্য" />
-            <NavItem link={"/admission/home"} text="অনলাইন অ্যাডমিশন" />
-            <NavItem link={"/result"} text="ফলাফল" />
-            <NavItem link={"/contact"} text="যোগাযোগ" />
+            <NavItem link={"/admission/home"} text="অ্যাডমিশন হোম" />
+            <NavItem link={"/admission/application-form"} text="আবেদন ফরম" />
+            <NavItem link={"/admission/result"} text="ফলাফল" />
           </div>
         </main>
       </div>
@@ -62,17 +56,10 @@ export default function Navbar() {
                   ></label>
                   <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4">
                     {/* Sidebar content here */}
-                    <li>
-                    <NavLink link={"/"} text="হোমপেজ" />   
-                    </li>
-                    <li><NavLink link={"/about"} text="আমাদের কথা" /></li>
-                    <li><NavLink link={"/teachers"} text="শিক্ষকমন্ডলীর তথ্য" /></li>
-                    <li><NavLink link={"/staffs"} text="স্টাফদের তথ্য" /></li>
-                    <li><NavLink link={"/committee"} text="কমিটির তথ্য" /></li>
-                    <li><NavLink link={"/students?class=all"} text="শিক্ষার্থীর তথ্য" /></li>
-                    <li><NavLink link={"/admission"} text="অনলাইন অ্যাডমিশন" /></li>
-                    <li><NavLink link={"/result"} text="ফলাফল" /></li>
-                    <li><NavLink link={"/contact"} text="যোগাযোগ" /></li>
+                    <li><NavLink link={"/"} text="হোমপেজ" /></li>
+                    <li><NavLink link={"/admission/home"} text="অ্যাডমিশন হোম" /></li>
+                    <li><NavLink link={"/admission/application-form"} text="আবেদন ফরম" /></li>
+                    <li><NavLink link={"/admission/result"} text="ফলাফল" /></li>
                   </ul>
                 </div>
               </div>
