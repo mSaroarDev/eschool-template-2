@@ -1,6 +1,8 @@
 import { ArrowDown } from "lucide-react";
 
-export default function ResultCard() {
+export default function ResultCard({data}) {
+  console.log(data);
+
   return (
     <>
       <div className="bg-white border-b border-borderColor px-4 py-2 flex items-start gap-5">
@@ -10,12 +12,12 @@ export default function ResultCard() {
 
         <div>
           <p className="font-bold">
-            অর্ধবার্ষিক ২০২৪ এর ফলাফল{" "}
+            {data?.title}
           </p>
-          <button className="bg-white border border-brandColor rounded-full px-4 py-1 mt-2 font-sm flex items-center gap-2 hover:bg-brandColor hover:text-white transition-all duration-300">
+          <a href={data?.pdf_link} download="Result" target='_blank' className="w-fit bg-white border border-brandColor rounded-full px-4 py-1 mt-2 font-sm flex items-center gap-2 hover:bg-brandColor hover:text-white transition-all duration-300">
             <ArrowDown className="w-4 h-4" />
             <span>ডাউনলোড</span>
-          </button>
+          </a>
         </div>
       </div>
     </>
