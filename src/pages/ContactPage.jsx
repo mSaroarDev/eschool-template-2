@@ -1,8 +1,32 @@
 import { PhoneForwarded } from "lucide-react";
+import { mySchoolId } from "../utils/getApiUrl";
+import { useEffect, useState } from "react";
+import { getSchoolInfo } from './../libs/schoolAPI';
 
 export default function ContactPage() {
-    const data = {};
-    const map_code = ''
+
+   // get school id
+   const schoolId = mySchoolId();
+
+   // fetch school info
+   const [data, setData] = useState();
+   const fetchData = async () => {
+     const res = await getSchoolInfo(schoolId);
+ 
+     if (res.ok) {
+       const data = await res.json();
+       setData(data.data);
+     } else {
+       console.log("Internal server error");
+     }
+   };
+ 
+   useEffect(() => {
+     fetchData();
+   }, []);
+
+   const map_code = data?.school_information?.google_map_code;
+
 
     return (
       <>
@@ -15,8 +39,8 @@ export default function ContactPage() {
   
           <main className="px-5">
           <div className="border border-brandColor overflow-hidden mt-2">
-        <div className="px-3 py-2 font-bold text-[18px] bg-brandColor text-white">
-          গুগল ম্যাপ
+        <div className="px-3 py-2 text-[18px] bg-brandColor text-white">
+          যোগাযোগ
         </div>
           <div className="p-5 bg-custom text-[17px]">
           <div className="flex flex-col gap-2">
@@ -66,7 +90,7 @@ export default function ContactPage() {
         </div>
 
         <div className="border border-brandColor overflow-hidden mt-2 ">
-        <div className="px-3 py-2 font-bold text-[18px] bg-brandColor text-white">
+        <div className="px-3 py-2 text-[18px] bg-brandColor text-white">
           গুগল ম্যাপ
         </div>
 

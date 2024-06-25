@@ -1,6 +1,29 @@
+import { useEffect, useState } from "react";
 import TeacherListCard from "../components/TeacherListCard";
+import { mySchoolId } from "../utils/getApiUrl";
+import { getAllStaffs } from './../libs/staffsAPI';
 
 export default function StaffsPage() {
+  // get school id
+  const schoolId = mySchoolId();
+
+  // fetch school info
+  const [data, setData] = useState();
+  const fetchData = async () => {
+    const res = await getAllStaffs(schoolId);
+
+    if (res.ok) {
+      const data = await res.json();
+      setData(data.data);
+    } else {
+      console.log("Internal server error");
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <>
         <section className="bg-white mt-2">
@@ -12,33 +35,13 @@ export default function StaffsPage() {
 
         <main className="px-5">
           <div className="grid grid-cols-12 my-10">
-            <div className="col-span-12 md:c0l-span-6 lg:col-span-3 mt-5">
-                <TeacherListCard classes="mx-5" />
-            </div>
 
-            <div className="col-span-12 md:c0l-span-6 lg:col-span-3 mt-5">
-                <TeacherListCard classes="mx-5" />
+            {data &&
+            data.map((item, i) => (
+              <div key={item._id} className="col-span-12 md:c0l-span-6 lg:col-span-3 mt-5">
+                <TeacherListCard data={item} sl={i} classes="mx-5" />
             </div>
-
-            <div className="col-span-12 md:c0l-span-6 lg:col-span-3 mt-5">
-                <TeacherListCard classes="mx-5" />
-            </div>
-
-            <div className="col-span-12 md:c0l-span-6 lg:col-span-3 mt-5">
-                <TeacherListCard classes="mx-5" />
-            </div>
-
-            <div className="col-span-12 md:c0l-span-6 lg:col-span-3 mt-5">
-                <TeacherListCard classes="mx-5" />
-            </div>
-
-            <div className="col-span-12 md:c0l-span-6 lg:col-span-3 mt-5">
-                <TeacherListCard classes="mx-5" />
-            </div>
-
-            <div className="col-span-12 md:c0l-span-6 lg:col-span-3 mt-5">
-                <TeacherListCard classes="mx-5" />
-            </div>
+            ))}
             
           </div>
         </main>

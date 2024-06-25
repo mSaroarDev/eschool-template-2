@@ -12,11 +12,10 @@ export default function Footer() {
             </nav>
             <nav>
                 <h6 className="footer-title">গুরুত্বপুর্ন লিংকস</h6>
-                <a className="link link-hover">শিক্ষা মন্ত্রনালয়</a>
-                <a className="link link-hover">এডুকেশন বোর্ড রেজাল্ট</a>
-                <a className="link link-hover">প্রাথমিক শিক্ষা অধিদপ্তর</a>
-                <a className="link link-hover">মাধ্যমিক ও উচ্চ মাধ্যমিক শিক্ষা অধিদপ্তর</a>
-                <a className="link link-hover"></a>
+                <a target="_blank" href="https://moedu.gov.bd" className="link link-hover">শিক্ষা মন্ত্রনালয়</a>
+                <a target="_blank" href="http://www.educationboardresults.gov.bd" className="link link-hover">এডুকেশন বোর্ড রেজাল্ট</a>
+                <a target="_blank" href="https://moedu.gov.bd" className="link link-hover">প্রাথমিক শিক্ষা অধিদপ্তর</a>
+                <a target="_blank" href="https://dshe.gov.bd" className="link link-hover">মাধ্যমিক ও উচ্চ মাধ্যমিক শিক্ষা অধিদপ্তর</a>
             </nav>
             <nav>
                 <h6 className="footer-title">শর্তাবলী</h6>
@@ -32,7 +31,7 @@ export default function Footer() {
                 <p>
                 কারিগরী সহায়তায়
                 <br />
-                    <a href="htttps://pathsala-edu.com"><img src="/pathsala-logo.png" className="w-[80px]" /></a>
+                    <a target="_blank" href="htttps://pathsala-edu.com"><img src="/pathsala-logo.png" className="w-[80px]" /></a>
                 <br />
                 <span>email: mail@pathsala.com</span>
                 </p>
