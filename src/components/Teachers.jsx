@@ -1,17 +1,32 @@
-import Carousel from "react-elastic-carousel";
 import TeacherListCard from "./TeacherListCard";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { mySchoolId } from "../utils/getApiUrl";
+import { useEffect, useState } from "react";
+import { getAllTeachers } from "../libs/teacherAPI";
 
 export default function Teachers() {
-  const items= [
-    { id: 1, title: "item #1" },
-    { id: 2, title: "item #2" },
-    { id: 3, title: "item #3" },
-    { id: 4, title: "item #4" },
-    { id: 5, title: "item #5" },
-  ];
+
+  // get school id
+  const schoolId = mySchoolId();
+
+  // fetch school info
+  const [items, setItems] = useState();
+  const fetchData = async () => {
+    const res = await getAllTeachers(schoolId)
+
+    if(res.ok){
+      const data = await res.json()
+      setItems(data.data)
+    } else {
+      console.log("Internal server error");
+    }
+  }
+
+  useEffect(()=> {
+    fetchData();
+  }, [])
 
   const settings = {
     dots: true,
@@ -58,8 +73,8 @@ export default function Teachers() {
 
           <div className="mt-5">
           <Slider {...settings}>
-              {items.map((item) => (
-                <TeacherListCard classes="w-full max-w-[250px] h-[320px] mx-auto" />
+              {items && items.map((item, i) => (
+                <TeacherListCard key={i} data={item} classes="w-full max-w-[250px] h-[320px] mx-auto" />
               ))}
             </Slider>
           </div>
