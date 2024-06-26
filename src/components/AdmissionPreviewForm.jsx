@@ -1,24 +1,28 @@
 import { useState } from "react";
-import { getAllClasses } from "../libs/classes";
-import { mySchoolId } from "../utils/getApiUrl";
 import { useEffect } from "react";
 import { useFormik } from "formik";
 import { showError, showSuccess } from "../utils/toastMessage";
-import fileUpload from "../utils/file-upload";
-import { createAdmission } from "../libs/admissoinAPI";
-import { useNavigate } from "react-router-dom";
+import { createAdmission, getAdmission, submitAdmission } from "../libs/admissoinAPI";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import Spinner from "./spinner/Spinner";
-import { ArrowRight } from 'lucide-react';
 
-export default function AdmissionForm() {
+export default function AdmissionPreviewForm() {
+  const { id } = useParams();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // fetch CLASSES info
-  const schoolId = mySchoolId();
+  // query
+  const [searchParams] = useSearchParams();
+  const tab = searchParams.get("tab")
+
+  // fetch photos
+  const [studentPhoto, setStudentPhoto] = useState();
+  const [studentSign, setStudentSign] = useState();
+
+  // const schoolId = mySchoolId();
   const [data, setData] = useState();
   const fetchData = async () => {
-    const res = await getAllClasses(schoolId);
+    const res = await getAdmission(id);
 
     if (res.ok) {
       const data = await res.json();
@@ -30,43 +34,19 @@ export default function AdmissionForm() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [id]); 
 
-  // upload image
-  // authorize sign image upload
-  const [studentPicture, setStudentPicture] = useState();
-  const [studentSign, setStudentSign] = useState();
+  // handle submit
+  const handleSubmit = async () => {
+    const res = await submitAdmission(id);
 
-  const handleStudentPictureChange = async (e) => {
-    await handleImageUpload(e, setStudentPicture, "student_image");
-  };
-
-  const handleStudentSignChange = async (e) => {
-    await handleImageUpload(e, setStudentSign, "student_sign");
-  };
-
-  const handleImageUpload = async (e, setImageUrl, formikFieldName) => {
-    try {
-      const image = e.target.files[0];
-      const fileSizeInKb = image.size / 1024;
-      if (fileSizeInKb > 1024) {
-        return showError("File size must be less than 1 MB");
-      }
-      const allowedTypes = ["image/jpeg", "image/png"];
-      if (!allowedTypes.includes(image.type)) {
-        return showError("Please select jpg or png image only");
-      }
-
-      const res = await fileUpload(image);
-      const file = await res.json();
-      if (res.ok) {
-        setImageUrl(file.url);
-        formik.setFieldValue(formikFieldName, file.url);
-      }
-    } catch (error) {
-      showError("Image Upload Failed");
+    if(res.ok){
+      showSuccess("আবেদন সফলভাবে জমা হয়েছে!")
+      navigate(`/admission/application/print/${id}`)
+    } else {
+      showError("There was an problem to submit")
     }
-  };
+  }
 
   // formik
   const formik = useFormik({
@@ -92,67 +72,50 @@ export default function AdmissionForm() {
       previous_institute: "",
       student_image: "",
       student_sign: "",
-      institute: schoolId,
     },
     onSubmit: async (values) => {
-      const {
-        name_en,
-        name_bn,
-        father_name,
-        mother_name,
-        dob,
-        gender,
-        present_address,
-        permanent_address,
-        religion,
-        nationality,
-        mobile_no,
-        blood_group,
-        birth_reg_no,
-        father_nid,
-        classe,
-        previous_classe,
-        previous_institute,
-        student_image,
-        student_sign,
-      } = values;
-
-      if (
-        !name_en ||
-        !name_bn ||
-        !father_name ||
-        !mother_name ||
-        !dob ||
-        !gender ||
-        !present_address ||
-        !permanent_address ||
-        !religion ||
-        !nationality ||
-        !mobile_no ||
-        !blood_group ||
-        !birth_reg_no ||
-        !father_nid ||
-        !classe ||
-        !student_image ||
-        !student_sign
-      ) {
-        return showError("* চিহ্নিত ঘর অবশ্য পূরনীয়");
-      }
-
       setLoading(true);
       const res = await createAdmission(values);
 
       setLoading(false);
       if (res.ok) {
-        showSuccess("Form Submitted");
+        showSuccess("Form Filled");
         const data = await res.json();
-        console.log(data);
-        navigate(`/admission/application-form/preview/${data?.data?.id}`);
+        window.open(`/admission/application/print/${data?.data?.id}`, '_blank');
       } else {
         showError("There was an error");
       }
     },
   });
+
+  // set field value
+  useEffect(() => {
+    formik.setValues({
+      name_en: data && data?.name_en,
+      name_bn: data && data?.name_bn,
+      father_name: data && data?.father_name,
+      mother_name: data && data?.mother_name,
+      dob: data && data?.dob,
+      gender: data && data?.gender,
+      present_address: data && data?.present_address,
+      permanent_address: data && data?.permanent_address,
+      religion: data && data?.religion,
+      nationality: data && data?.nationality,
+      mobile_no: data && data?.mobile_no,
+      blood_group: data && data?.blood_group,
+      birth_reg_no: data && data?.birth_reg_no,
+      father_nid: data && data?.father_nid,
+      classe: data && data?.admission_info?.classe,
+      department: data && data?.admission_info?.department,
+      previous_classe: data && data?.admission_info?.previous_classe,
+      previous_roll_no: data && data?.admission_info?.previous_roll_no,
+      previous_institute: data && data?.admission_info?.previous_institute,
+      student_image: data && data?.student_image,
+      student_sign: data && data?.student_sign,
+    });
+    setStudentPhoto(data && data?.student_image);
+    setStudentSign(data && data?.student_sign);
+  }, [id, data]);
 
   return (
     <>
@@ -171,7 +134,7 @@ export default function AdmissionForm() {
             <div className="col-span-12 md:col-span-9 flex items-center gap-3">
               <span className="hidden md:block">:</span>
               <input
-                className="w-full uppercase"
+                className="w-full uppercase border-none pointer-events-none"
                 type="text"
                 name="name_en"
                 id="name_en"
@@ -188,7 +151,7 @@ export default function AdmissionForm() {
             <div className="col-span-12 md:col-span-9 flex items-center gap-3">
               <span className="hidden md:block">:</span>
               <input
-                className="w-full"
+                className="w-full border-none pointer-events-none"
                 type="text"
                 name="name_bn"
                 id="name_bn"
@@ -205,7 +168,7 @@ export default function AdmissionForm() {
             <div className="col-span-12 md:col-span-9 flex items-center gap-3">
               <span className="hidden md:block">:</span>
               <input
-                className="w-full"
+                className="w-full border-none pointer-events-none"
                 type="text"
                 name="father_name"
                 id="father_name"
@@ -222,7 +185,7 @@ export default function AdmissionForm() {
             <div className="col-span-12 md:col-span-9 flex items-center gap-3">
               <span className="hidden md:block">:</span>
               <input
-                className="w-full"
+                className="w-full border-none pointer-events-none"
                 type="text"
                 name="mother_name"
                 id="mother_name"
@@ -239,7 +202,7 @@ export default function AdmissionForm() {
             <div className="col-span-12 md:col-span-6 flex items-center gap-3">
               <span className="hidden md:block">:</span>
               <input
-                className="w-full"
+                className="w-full border-none pointer-events-none"
                 type="text"
                 name="dob"
                 id="dob"
@@ -255,17 +218,14 @@ export default function AdmissionForm() {
             </label>
             <div className="col-span-12 md:col-span-9 flex items-center gap-3">
               <span className="hidden md:block">:</span>
-              <select
-                className="w-full"
+              <input
+                type="text"
+                className="w-full border-none pointer-events-none"
                 name="gender"
                 id="gender"
                 onChange={formik.handleChange}
                 value={formik.values.gender}
-              >
-                <option value="">সিলেক্ট করুন</option>
-                <option value="পুরুষ">পুরুষ</option>
-                <option value="নারী">নারী</option>
-              </select>
+              ></input>
             </div>
           </div>
 
@@ -276,7 +236,7 @@ export default function AdmissionForm() {
             <div className="col-span-12 md:col-span-9 flex items-center gap-3">
               <span className="hidden md:block">:</span>
               <input
-                className="w-full"
+                className="w-full border-none pointer-events-none"
                 type="text"
                 name="permanent_address"
                 id="permanent_address"
@@ -293,7 +253,7 @@ export default function AdmissionForm() {
             <div className="col-span-12 md:col-span-9 flex items-center gap-3">
               <span className="hidden md:block">:</span>
               <input
-                className="w-full"
+                className="w-full border-none pointer-events-none"
                 type="text"
                 name="present_address"
                 id="present_address"
@@ -309,20 +269,14 @@ export default function AdmissionForm() {
             </label>
             <div className="col-span-12 md:col-span-6 flex items-center gap-3">
               <span className="hidden md:block">:</span>
-              <select
-                className="w-full"
+              <input
+                type="text"
+                className="w-full border-none pointer-events-none"
                 name="religion"
                 id="religion"
                 onChange={formik.handleChange}
                 value={formik.values.religion}
-              >
-                <option value="">সিলেক্ট করুন</option>
-                <option value="ইসলাম">ইসলাম</option>
-                <option value="হিন্দু">হিন্দু</option>
-                <option value="বৌদ্ধ">বৌদ্ধ</option>
-                <option value="খ্রীষ্টান">খ্রীষ্টান</option>
-                <option value="অন্যান্য">অন্যান্য</option>
-              </select>
+              ></input>
             </div>
           </div>
 
@@ -332,17 +286,14 @@ export default function AdmissionForm() {
             </label>
             <div className="col-span-12 md:col-span-9 flex items-center gap-3">
               <span className="hidden md:block">:</span>
-              <select
-                className="w-full"
+              <input
+                type="text"
+                className="w-full border-none pointer-events-none"
                 name="nationality"
                 id="nationality"
                 onChange={formik.handleChange}
                 value={formik.values.nationality}
-              >
-                <option value="">সিলেক্ট করুন</option>
-                <option value="বাংলাদেশী">বাংলাদেশী</option>
-                <option value="অন্যান্য">অন্যান্য</option>
-              </select>
+              ></input>
             </div>
           </div>
 
@@ -353,7 +304,7 @@ export default function AdmissionForm() {
             <div className="col-span-12 md:col-span-6 flex items-center gap-3">
               <span className="hidden md:block">:</span>
               <input
-                className="w-full"
+                className="w-full border-none pointer-events-none"
                 type="text"
                 name="mobile_no"
                 id="mobile_no"
@@ -369,23 +320,14 @@ export default function AdmissionForm() {
             </label>
             <div className="col-span-12 md:col-span-9 flex items-center gap-3">
               <span className="hidden md:block">:</span>
-              <select
-                className="w-full"
+              <input
+                type="text"
+                className="w-full border-none pointer-events-none"
                 name="blood_group"
                 id="blood_group"
                 onChange={formik.handleChange}
                 value={formik.values.blood_group}
-              >
-                <option value="">সিলেক্ট করুন</option>
-                <option value="A (+ve)">A (+ve)</option>
-                <option value="A (-ve)">A (-ve)</option>
-                <option value="B (+ve)">B (+ve)</option>
-                <option value="B (-ve)">B (-ve)</option>
-                <option value="AB (+ve)">AB (+ve)</option>
-                <option value="AB (-ve)">AB (-ve)</option>
-                <option value="O (+ve)">O (+ve)</option>
-                <option value="O (-ve)">O (-ve)</option>
-              </select>
+              />
             </div>
           </div>
 
@@ -397,7 +339,7 @@ export default function AdmissionForm() {
             <div className="col-span-12 md:col-span-6 flex items-center gap-3">
               <span className="hidden md:block">:</span>
               <input
-                className="w-full"
+                className="w-full border-none pointer-events-none"
                 type="text"
                 name="birth_reg_no"
                 id="birth_reg_no"
@@ -414,7 +356,7 @@ export default function AdmissionForm() {
             <div className="col-span-12 md:col-span-9 flex items-center gap-3">
               <span className="hidden md:block">:</span>
               <input
-                className="w-full"
+                className="w-full border-none pointer-events-none"
                 type="text"
                 name="father_nid"
                 id="father_nid"
@@ -424,31 +366,24 @@ export default function AdmissionForm() {
             </div>
           </div>
 
-          <div className="col-span-12 mt-5 font-bold underline text-center">
+          <div className="col-span-12 my-5 font-bold underline text-center">
             ভর্তি সংক্রান্ত তথ্যঃ-
           </div>
 
           <div className="col-span-6 grid grid-cols-12 gap-1 md:gap-3">
             <label className="col-span-12 md:col-span-6">
-             ভর্তিচ্ছু শ্রেনী <span className="text-red-500">*</span>
+              শ্রেনী <span className="text-red-500">*</span>
             </label>
             <div className="col-span-12 md:col-span-6 flex items-center gap-3">
               <span className="hidden md:block">:</span>
-              <select
-                className="w-full"
+              <input
+                type="text"
+                className="w-full border-none pointer-events-none capitalize"
                 name="classe"
                 id="classe"
                 onChange={formik.handleChange}
                 value={formik.values.classe}
-              >
-                <option value="">সিলেক্ট করুন</option>
-                {data &&
-                  data?.map((item, i) => (
-                    <option key={i} value={item?.name_bn}>
-                      {item?.name_bn}
-                    </option>
-                  ))}
-              </select>
+              />
             </div>
           </div>
 
@@ -458,18 +393,14 @@ export default function AdmissionForm() {
             </label>
             <div className="col-span-12 md:col-span-9 flex items-center gap-3">
               <span className="hidden md:block">:</span>
-              <select
-                className="w-full"
+              <input
+                type="text"
+                className="w-full border-none pointer-events-none"
                 name="department"
                 id="department"
                 onChange={formik.handleChange}
                 value={formik.values.department}
-              >
-                <option value="">সিলেক্ট করুন</option>
-                <option value="বিজ্ঞান">বিজ্ঞান</option>
-                <option value="মানবিক">মানবিক</option>
-                <option value="বানিজ্য">বানিজ্য</option>
-              </select>
+              />
             </div>
           </div>
 
@@ -485,7 +416,7 @@ export default function AdmissionForm() {
             <div className="col-span-12 md:col-span-9 flex items-center gap-3">
               <span className="hidden md:block">:</span>
               <input
-                className="w-full"
+                className="w-full border-none pointer-events-none"
                 type="text"
                 name="previous_institute"
                 id="previous_institute"
@@ -502,7 +433,7 @@ export default function AdmissionForm() {
             <div className="col-span-12 md:col-span-6 flex items-center gap-3">
               <span className="hidden md:block">:</span>
               <input
-                className="w-full"
+                className="w-full border-none pointer-events-none"
                 type="text"
                 name="previous_classe"
                 id="previous_classe"
@@ -520,7 +451,7 @@ export default function AdmissionForm() {
             <div className="col-span-12 md:col-span-9 flex items-center gap-3">
               <span className="hidden md:block">:</span>
               <input
-                className="w-full"
+                className="w-full border-none pointer-events-none"
                 type="text"
                 name="previous_roll_no"
                 id="previous_roll_no"
@@ -530,31 +461,28 @@ export default function AdmissionForm() {
             </div>
           </div>
 
-          <div className="col-span-6 grid grid-cols-12 gap-1 md:gap-3 mt-7">
+          <div className="col-span-6 grid grid-cols-12 gap-1 md:gap-3 mt-5">
             <label className="col-span-12 md:col-span-6">
               শিক্ষার্থীর ছবি <span className="text-red-500">*</span>
             </label>
-            <div className="col-span-12 md:col-span-6 flex items-center gap-3">
+            <div className="col-span-12 md:col-span-6 flex items-start gap-3">
               <span className="hidden md:block">:</span>
-              <input
-                className="w-full"
-                type="file"
-                onChange={handleStudentPictureChange}
-              />
+
+              {studentPhoto && (
+                <img src={studentPhoto} className="w-[120px] h-[120px]" />
+              )}
             </div>
           </div>
 
-          <div className="col-span-6 grid grid-cols-12 gap-1 md:gap-3 mt-7">
-            <label className="col-span-12 md:col-span-3 flex items-center justify-end">
+          <div className="col-span-6 grid grid-cols-12 gap-1 md:gap-3 mt-5">
+            <label className="col-span-12 md:col-span-3 flex items-start justify-end">
               স্বাক্ষর <span className="text-red-500">*</span>
             </label>
-            <div className="col-span-12 md:col-span-9 flex items-center gap-3">
+            <div className="col-span-12 md:col-span-9 flex items-start gap-3">
               <span className="hidden md:block">:</span>
-              <input
-                className="w-full"
-                type="file"
-                onChange={handleStudentSignChange}
-              />
+              {studentSign && (
+                <img src={studentSign} className="w-[150px] h-[80px]" />
+              )}
             </div>
           </div>
 
@@ -566,10 +494,11 @@ export default function AdmissionForm() {
           </div>
 
           <div className="col-span-12 flex items-center justify-center">
-            <button type="submit" className="btn-brand flex items-center gap-2">
-                <span>পরবর্তী ধাপ</span>
-                <ArrowRight className="w-4 h-4" />
-            </button>
+            {tab !== "view" ? <button type="button" onClick={handleSubmit} className="btn-brand rounded-full">
+              জমা দিন
+            </button> : <button type="button" onClick={()=> navigate(`/application-form/print/${id}`)} className="btn-brand rounded-full">
+              প্রিন্ট করুন
+            </button>}
           </div>
         </div>
       </form>

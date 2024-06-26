@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { mySchoolId } from "../utils/getApiUrl";
 import { getSchoolInfo } from "../libs/schoolAPI";
+import { Link } from "react-router-dom";
 
 export default function Header() {
   // get school id
@@ -27,7 +28,11 @@ export default function Header() {
     <>
       <div className="bg-gray-100 py-1">
         <main>
-          <div className="flex items-center justify-end">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Link to="/">হোমপেজ</Link> • 
+              <Link to="/">শিক্ষক লগিন</Link>
+            </div>
             <p className="flex items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

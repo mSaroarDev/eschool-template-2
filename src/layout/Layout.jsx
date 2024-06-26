@@ -9,7 +9,11 @@ export default function MasterLayout({ children }) {
 
   return (
     <>
-      {pathname.startsWith("/admission") ? (
+      {pathname.startsWith("/admission/application/print") ? (
+        <>
+          {children}
+        </>
+      ) : pathname.startsWith("/admission") ? (
         <>
           <Header />
           <AdmissionNavbar />
