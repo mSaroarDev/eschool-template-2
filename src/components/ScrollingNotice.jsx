@@ -35,7 +35,7 @@ export default function ScrollingNotice() {
             <marquee>
               {notices &&
                 notices.map((item, i) => (
-                  <Link to={`/notice/details/${item?._id}`} key={i} className="mr-20 hover:underline text-[15px] font-semibold text-black">
+                  <Link to={`/notice/${item?._id}`} key={i} className="mr-20 hover:underline text-[15px] font-semibold text-black">
                     » {item.title}
                   </Link>
                 ))}

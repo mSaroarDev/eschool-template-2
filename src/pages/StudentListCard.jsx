@@ -30,10 +30,10 @@ export default function StudentListCard({data, sl}) {
         </td>
         <td className="px-6 py-4">{data?.personal_information?.permanent_address?.district2}</td>
         <td className="px-6 py-4 text-right">
-          <Link to={`/student/profile/${data?._id}`} className="bg-brandColor text-white px-3 py-2 hover:bg-brandColor/20 hover:text-brandColor items-center gap-1 inline-flex">
+          {/* <Link to={`/student/profile/${data?._id}`} className="bg-brandColor text-white px-3 py-2 hover:bg-brandColor/20 hover:text-brandColor items-center gap-1 inline-flex">
             <span>প্রোফাইল</span>
             <ChevronRight className="w-4 h-4" />
-          </Link>
+          </Link> */}
         </td>
       </tr>
     </>

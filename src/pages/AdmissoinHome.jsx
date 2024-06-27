@@ -1,7 +1,40 @@
+import { useEffect, useState } from "react";
+import { mySchoolId } from "../utils/getApiUrl";
+import { getSchoolInfo } from "../libs/schoolAPI";
+import { useSEOInfo } from "../seo/useSeoInfo";
+import SEOPage from './../components/SEOPage';
+
 export default function AdmissoinHome() {
-  const data = {};
+  // get school id
+  const schoolId = mySchoolId();
+
+  // fetch school info
+  const [data, setData] = useState();
+  const fetchData = async () => {
+    const res = await getSchoolInfo(schoolId);
+
+    if (res.ok) {
+      const data = await res.json();
+      setData(data.data);
+    } else {
+      console.log("Internal server error");
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  // seo
+  const getSeoInfo = useSEOInfo();
+
   return (
     <>
+      {/* seo start */}
+      <SEOPage title={`Admission Home - ${getSeoInfo && getSeoInfo?.schoolInfo?.name_en}`} />
+      {/* seo end */}
+
+
       <main className="px-5">
         {data && data?.admission_corner?.isOpen == "false" ? (
           <div className="my-24">

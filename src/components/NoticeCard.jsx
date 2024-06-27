@@ -1,8 +1,10 @@
 import { ArrowDown } from "lucide-react";
-import extractDateFromTimestamp, { getBanglaMonthNameFromTimestamp } from "../utils/extractDateFromTimeStamp";
+import extractDateFromTimestamp, {
+  getBanglaMonthNameFromTimestamp,
+} from "../utils/extractDateFromTimeStamp";
+import { Link } from "react-router-dom";
 
-export default function NoticeCard({data}) {
-  console.log(data);
+export default function NoticeCard({ data }) {
   return (
     <>
       <div className="bg-white border-b border-borderColor px-4 py-2 flex items-start gap-5">
@@ -16,13 +18,14 @@ export default function NoticeCard({data}) {
         </div>
 
         <div>
-          <p className="font-bold">
-            {data.title}
-          </p>
-          <button className="bg-white border border-brandColor rounded-full px-4 py-1 mt-2 font-sm flex items-center gap-2 hover:bg-brandColor hover:text-white transition-all duration-300">
+          <p className="font-bold">{data.title}</p>
+          <Link
+            to={`/notice/${data?._id}`}
+            className="w-fit bg-white border border-brandColor rounded-full px-4 py-1 mt-2 font-sm flex items-center gap-2 hover:bg-brandColor hover:text-white transition-all duration-300"
+          >
             <ArrowDown className="w-4 h-4" />
-            <span>ডাউনলোড</span>
-          </button>
+            <span>দেখুন</span>
+          </Link>
         </div>
       </div>
     </>

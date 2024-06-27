@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { mySchoolId } from "../utils/getApiUrl";
+import { getLoginUrl, mySchoolId } from "../utils/getApiUrl";
 import { getSchoolInfo } from "../libs/schoolAPI";
 import { Link } from "react-router-dom";
 
@@ -24,6 +24,8 @@ export default function Header() {
     fetchData();
   }, []);
 
+  const loginUrl = getLoginUrl()
+
   return (
     <>
       <div className="bg-gray-100 py-1">
@@ -31,7 +33,7 @@ export default function Header() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Link to="/">হোমপেজ</Link> • 
-              <Link to="/">শিক্ষক লগিন</Link>
+              <a href={loginUrl} target="_blank">শিক্ষক লগিন</a>
             </div>
             <p className="flex items-center gap-2">
               <svg

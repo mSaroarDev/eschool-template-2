@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import TeacherListCard from "../components/TeacherListCard";
 import { mySchoolId } from "../utils/getApiUrl";
 import { getAllStaffs } from './../libs/staffsAPI';
+import { useSEOInfo } from "../seo/useSeoInfo";
+import SEOPage from "../components/SEOPage";
 
 export default function StaffsPage() {
   // get school id
@@ -24,8 +26,16 @@ export default function StaffsPage() {
     fetchData();
   }, []);
 
+  const getSeoInfo = useSEOInfo();
+
   return (
     <>
+
+      {/* seo start */}
+      <SEOPage title={`Staffs - ${getSeoInfo && getSeoInfo?.schoolInfo?.name_en}`} />
+      {/* seo end */}
+
+
         <section className="bg-white mt-2">
         <main>
           <div className="bg-lightBg px-5 py-10 text-center text-2xl font-bold">

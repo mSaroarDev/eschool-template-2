@@ -1,7 +1,6 @@
 import { ArrowDown } from "lucide-react";
 
 export default function ResultCard({data}) {
-  console.log(data);
 
   return (
     <>

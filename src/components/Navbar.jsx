@@ -13,7 +13,6 @@ export default function Navbar() {
             <NavItem link={"/staffs"} text="স্টাফদের তথ্য" />
             <NavItem link={"/committee"} text="কমিটির তথ্য" />
             <NavItem link={"/students/all?page=1"} text="শিক্ষার্থীর তথ্য" />
-            <NavItem link={"/admission/home"} text="অনলাইন অ্যাডমিশন" />
             <NavItem link={"/result"} text="ফলাফল" />
             <NavItem link={"/contact"} text="যোগাযোগ" />
           </div>

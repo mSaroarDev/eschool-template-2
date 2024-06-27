@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import ResultListCard from "../components/ResultListCard";
 import { mySchoolId } from "../utils/getApiUrl";
 import { getAllResults } from "../libs/restultAPI";
+import { useSEOInfo } from "../seo/useSeoInfo";
+import SEOPage from "../components/SEOPage";
 
 
 export default function ResultPage() {
@@ -27,10 +29,13 @@ export default function ResultPage() {
 
   const fewResults = data && data.slice(0, 20)
 
+  // seo
+  const getSeoInfo = useSEOInfo();
+
   return (
     <>
       {/* seo start */}
-      {/* <SEOPage title={`Result - ${getSeoInfo && getSeoInfo?.schoolInfo?.name_en}`} /> */}
+      <SEOPage title={`Result - ${getSeoInfo && getSeoInfo?.schoolInfo?.name_en}`} />
       {/* seo end */}
 
       

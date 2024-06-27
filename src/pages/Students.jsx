@@ -5,6 +5,8 @@ import { mySchoolId } from "../utils/getApiUrl";
 import { useEffect, useState } from "react";
 import { getAllClasses } from './../libs/classes';
 import { getAllClassStudents, getAllStudents } from "../libs/students";
+import { useSEOInfo } from "../seo/useSeoInfo";
+import SEOPage from "../components/SEOPage";
 
 export default function StudentsPage() {
   // get school id
@@ -75,10 +77,16 @@ export default function StudentsPage() {
     fetchAllStudents();
   }, [id]);
 
-  console.log(allStudents);
+  // seo
+  const getSeoInfo = useSEOInfo();
 
   return (
     <>
+      {/* seo start */}
+      <SEOPage title={`Students - ${getSeoInfo && getSeoInfo?.schoolInfo?.name_en}`} />
+      {/* seo end */}
+
+
         <section className="bg-white mt-2">
         <main>
           <div className="bg-lightBg px-5 py-5 text-center text-2xl font-bold">
@@ -86,9 +94,10 @@ export default function StudentsPage() {
           </div>
         </main>
 
-        <main className="px-5 my-2">
+        <main className="px-5 my-5">
           <div className="flex items-center gap-1">
             <p className="font-bold">শ্রেনী অনুযায়ী দেখুনঃ</p>
+            <Link to={`/students/all?page=1`} className="bg-brandColor text-white px-3 py-1 rounded-full">সকল</Link>
             {data &&
               data.map((item, i) => (
                 <Link key={i} to={`/students/${item?.name_en}?page=1`} className="bg-brandColor text-white px-3 py-1 rounded-full">{item?.name_bn}</Link>

@@ -1,4 +1,4 @@
-import { CalendarDays, History, Info } from "lucide-react";
+import { History, Info } from "lucide-react";
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -70,7 +70,8 @@ export default function Hero() {
           <div className="grid grid-cols-12 gap-5">
             <div className="col-span-12 md:col-span-6 lg:col-span-2 flex flex-col justify-between">
               <Link
-                to="/"
+                target="_blank"
+                to="/admission/home"
                 className="bg-brandColor text-white flex flex-col items-center justify-center gap-2 py-3"
               >
                 <svg
@@ -92,15 +93,29 @@ export default function Hero() {
               </Link>
 
               <Link
-                to="/"
+                to="/notices"
                 className="bg-brandColor text-white flex flex-col items-center justify-center gap-2 py-3"
               >
-                <CalendarDays />
-                <span>একাডেমিক ক্যালেন্ডার</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 1 1 0-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.461a20.845 20.845 0 0 1-1.44-4.282m3.102.069a18.03 18.03 0 0 1-.59-4.59c0-1.586.205-3.124.59-4.59m0 9.18a23.848 23.848 0 0 1 8.835 2.535M10.34 6.66a23.847 23.847 0 0 0 8.835-2.535m0 0A23.74 23.74 0 0 0 18.795 3m.38 1.125a23.91 23.91 0 0 1 1.014 5.395m-1.014 8.855c-.118.38-.245.754-.38 1.125m.38-1.125a23.91 23.91 0 0 0 1.014-5.395m0-3.46c.495.413.811 1.035.811 1.73 0 .695-.316 1.317-.811 1.73m0-3.46a24.347 24.347 0 0 1 0 3.46"
+                  />
+                </svg>
+
+                <span>একাডেমিক নোটিশ</span>
               </Link>
 
               <Link
-                to="/"
+                to="/about"
                 className="bg-brandColor text-white flex flex-col items-center justify-center gap-2 py-3"
               >
                 <History />
@@ -108,17 +123,17 @@ export default function Hero() {
               </Link>
 
               <Link
-                to="/"
+                to="/about"
                 className="bg-brandColor text-white flex flex-col items-center justify-center gap-2 py-3"
               >
                 <Info />
-                <span>সাংক্ষিপ্ত বিবরনী</span>
+                <span>সংক্ষিপ্ত বিবরনী</span>
               </Link>
             </div>
             <div className="col-span-12 md:col-span-6 lg:col-span-6 h-[352px] w-full">
               <Slider {...settings}>
-                {heroImages.map((item) => (
-                  <div className="w-full h-full">
+                {heroImages.map((item, i) => (
+                  <div key={i} className="w-full h-full">
                     <img
                       src="/school.webp"
                       alt="Photo"

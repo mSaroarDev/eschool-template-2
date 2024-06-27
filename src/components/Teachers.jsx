@@ -7,26 +7,25 @@ import { useEffect, useState } from "react";
 import { getAllTeachers } from "../libs/teacherAPI";
 
 export default function Teachers() {
-
   // get school id
   const schoolId = mySchoolId();
 
   // fetch school info
   const [items, setItems] = useState();
   const fetchData = async () => {
-    const res = await getAllTeachers(schoolId)
+    const res = await getAllTeachers(schoolId);
 
-    if(res.ok){
-      const data = await res.json()
-      setItems(data.data)
+    if (res.ok) {
+      const data = await res.json();
+      setItems(data.data);
     } else {
       console.log("Internal server error");
     }
-  }
+  };
 
-  useEffect(()=> {
+  useEffect(() => {
     fetchData();
-  }, [])
+  }, []);
 
   const settings = {
     dots: true,
@@ -42,29 +41,31 @@ export default function Teachers() {
           slidesToShow: 3,
           slidesToScroll: 3,
           infinite: true,
-          dots: true
-        }
+          dots: true,
+        },
       },
       {
         breakpoint: 600,
         settings: {
           slidesToShow: 2,
           slidesToScroll: 2,
-          initialSlide: 2
-        }
+          initialSlide: 2,
+        },
       },
       {
         breakpoint: 480,
         settings: {
           slidesToShow: 1,
-          slidesToScroll: 1
-        }
-      }
-    ]
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
+
 
   return (
     <>
+
       <section className="py-20 bg-body">
         <main className="px-5">
           <h2 className="font-bold text-[22px] text-center">
@@ -72,10 +73,15 @@ export default function Teachers() {
           </h2>
 
           <div className="mt-5">
-          <Slider {...settings}>
-              {items && items.map((item, i) => (
-                <TeacherListCard key={i} data={item} classes="w-full max-w-[250px] h-[320px] mx-auto" />
-              ))}
+            <Slider {...settings}>
+              {items &&
+                items.map((item, i) => (
+                  <TeacherListCard
+                    key={i}
+                    data={item}
+                    classes="w-full max-w-[250px] h-[320px] mx-auto"
+                  />
+                ))}
             </Slider>
           </div>
         </main>

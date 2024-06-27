@@ -16,6 +16,8 @@ import TestPDF from "./pages/TestPDF";
 import AdmissionResultPage from "./pages/AdmissionResult";
 import AdmissionResultViewPage from "./pages/AdmissionResultView";
 import { Toaster } from "react-hot-toast";
+import Notices from "./pages/Notices";
+import NoticeDetails from "./pages/NoticeDetails";
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/notices" element={<Notices />} />
+          <Route path="/notice/:id" element={<NoticeDetails />} />
           <Route path="/teachers" element={<TeachersPage />} />
           <Route path="/staffs" element={<StaffsPage />} />
           <Route path="/committee" element={<CommitteePage />} />
@@ -39,7 +43,10 @@ function App() {
             path="/admission/application-form/preview/:id"
             element={<AdmissionPreviewPage />}
           />
-          <Route path="/admission/application/print/:id" element={<TestPDF />} />
+          <Route
+            path="/admission/application/print/:id"
+            element={<TestPDF />}
+          />
           <Route path="/admission/result" element={<AdmissionResultPage />} />
           <Route
             path="/admission/result/:id"

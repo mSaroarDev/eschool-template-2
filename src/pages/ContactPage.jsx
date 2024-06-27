@@ -2,6 +2,8 @@ import { PhoneForwarded } from "lucide-react";
 import { mySchoolId } from "../utils/getApiUrl";
 import { useEffect, useState } from "react";
 import { getSchoolInfo } from './../libs/schoolAPI';
+import { useSEOInfo } from "../seo/useSeoInfo";
+import SEOPage from "../components/SEOPage";
 
 export default function ContactPage() {
 
@@ -27,9 +29,16 @@ export default function ContactPage() {
 
    const map_code = data?.school_information?.google_map_code;
 
+   // seo
+  const getSeoInfo = useSEOInfo();
 
     return (
       <>
+      {/* seo start */}
+      <SEOPage title={`Contact Us - ${getSeoInfo && getSeoInfo?.schoolInfo?.name_en}`} />
+      {/* seo end */}
+
+
         <section className="bg-white mt-2">
           <main>
             <div className="bg-lightBg px-5 py-10 text-center text-2xl font-bold">
